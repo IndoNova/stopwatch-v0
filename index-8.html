@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch dengan Lap Time</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 50px;
+      }
+      .container {
+        max-width: 300px;
+        margin: auto;
+        padding: 20px;
+        background: #f4f4f4;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      .time {
+        font-size: 2em;
+        margin: 20px 0;
+      }
+      button {
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        margin: 5px;
+        border-radius: 5px;
+        color: white;
+      }
+      .start {
+        background: #2ecc71;
+      }
+      .pause {
+        background: #f39c12;
+      }
+      .reset {
+        background: #e74c3c;
+      }
+      .lap {
+        background: #3498db;
+      }
+      button:hover {
+        opacity: 0.8;
+      }
+      .lap-container {
+        margin-top: 20px;
+        text-align: left;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .lap-item {
+        background: white;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transform: translateY(-10px);
+        animation: fadeIn 0.3s forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Stopwatch dengan Lap Time</h1>
+    <div class="container">
+      <div class="time" id="display">00:00:00</div>
+      <button class="start" onclick="mulai()">Start</button>
+      <button class="pause" onclick="berhenti()">Pause</button>
+      <button class="reset" onclick="reset()">Reset</button>
+      <button class="lap" onclick="tambahLap()">Lap</button>
+    </div>
+
+    <div class="lap-container">
+      <h2>Lap Times:</h2>
+      <ul id="lapList"></ul>
+    </div>
+
+    <script>
+      let menit = 0,
+        detik = 0,
+        milidetik = 0;
+      let interval;
+      let isRunning = false;
+
+      function updateDisplay() {
+        document.getElementById("display").innerText =
+          (menit < 10 ? "0" + menit : menit) +
+          ":" +
+          (detik < 10 ? "0" + detik : detik) +
+          ":" +
+          (milidetik < 10 ? "0" + milidetik : milidetik);
+      }
+
+      function mulai() {
+        if (!isRunning) {
+          isRunning = true;
+          interval = setInterval(() => {
+            milidetik++;
+            if (milidetik === 100) {
+              milidetik = 0;
+              detik++;
+            }
+            if (detik === 60) {
+              detik = 0;
+              menit++;
+            }
+            updateDisplay();
+          }, 10);
+        }
+      }
+
+      function berhenti() {
+        isRunning = false;
+        clearInterval(interval);
+      }
+
+      function reset() {
+        berhenti();
+        menit = 0;
+        detik = 0;
+        milidetik = 0;
+        updateDisplay();
+        document.getElementById("lapList").innerHTML = ""; // Hapus semua lap
+      }
+
+      function tambahLap() {
+        let lapList = document.getElementById("lapList");
+        let lapItem = document.createElement("li");
+        lapItem.classList.add("lap-item");
+        lapItem.textContent = document.getElementById("display").innerText;
+        lapList.appendChild(lapItem);
+      }
+    </script>
+  </body>
+</html>
